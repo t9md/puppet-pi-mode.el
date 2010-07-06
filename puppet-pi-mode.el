@@ -67,18 +67,27 @@
     map)
   "Key map used in puppet-pi-mode buffers.")
 
+(defun puppet-pi-get-type-list()
+  (interactive)
+  (let ((raw-list nil))
+	(setq raw-list (with-temp-buffer
+					 (call-process "pi" nil (current-buffer)  t "-l")
+					 (buffer-string)))
+	(delete nil (mapcar (lambda (line)
+						  (when (string-match  " +- +" line)
+							(car (split-string line " +- +"))))
+						(split-string raw-list "\n")))))
+
+(defvar puppet-pi-type-list nil)
+
 (defun puppet-pi-query ()
   "query for word with pi"
   (interactive)
   (let ((query
 		 (completing-read
 		  "Which type? "
-		  (list "augeas" "computer" "cron" "exec" "file" "filebucket" "group" "host" "k5login"
-				"macauthorization" "mailalias" "maillist" "mcx" "mount" "nagios_command" "nagios_contact" "nagios_contactgroup"
-				"nagios_host" "nagios_hostdependency" "nagios_hostescalation" "nagios_hostextinfo" "nagios_hostgroup" "nagios_service"
-				"nagios_servicedependency" "nagios_serviceescalation" "nagios_serviceextinfo" "nagios_servicegroup" "nagios_timeperiod"
-				"notify" "package" "resources" "schedule" "selboolean" "selmodule" "service" "ssh_authorized_key" "sshkey" "tidy" "user"
-				"yumrepo" "zfs" "zone" "zpool")  nil t ))
+		  (or puppet-pi-type-list
+			  (setq puppet-pi-type-list (puppet-pi-get-type-list)))  nil t ))
 		(pi-buf (get-buffer-create puppet-pi-buffer-name)))
 	(set-buffer pi-buf)
 	(puppet-pi-mode)
