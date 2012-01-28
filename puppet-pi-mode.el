@@ -1,5 +1,5 @@
-;;;  -*- coding: utf-8; mode: emacs-lisp; -*-
-;;; puppet-pi-mode.el
+;;; puppet-pi-mode.el --- interface to puppet commandline tool pi
+;; -*- coding: utf-8; -*-
 
 ;; Author: t9md <taqumd -at- gmail.com>
 ;; Keywords: puppet
@@ -47,6 +47,8 @@
 ;;; Todo:
 ;; Setup pi query keywords from the resoult of 'pi --list'.
 ;; Cache the result of pi query.
+
+;;; Code:
 
 (defvar puppet-pi-disable-select-window nil
   "*Option to disable to select other window.")
